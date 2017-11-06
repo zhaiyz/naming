@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>命名-Naming</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+
+<!-- 你的HTML代码 -->
+<div class="layui-container">
+    <div class="chinese-name-input"></div>
+    <div class="layui-row">
+        <div class="layui-col-md3">
+            &nbsp;
+        </div>
+        <div class="layui-col-md6">
+            <form class="layui-form" action="/naming">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <input type="text" name="chinese_name" required lay-verify="required" placeholder="请输入中文名"
+                               value="{% if chinese_name %}{{ chinese_name }}{% endif %}" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <button class="layui-btn" lay-submit lay-filter="form-search">搜索</button>
+                    </div>
+                </div>
+                {% if chinese_name %}
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                            <input type="text" name="english_name" placeholder="请输入英文名"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+
+
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit lay-filter="form-naming">命名</button>
+                        </div>
+                    </div>
+                {% endif %}
+            </form>
+            <div class="result-list"></div>
+            {% for item in result %}
+                <div class="layui-row">
+                    <div class="layui-col-md12">{{ item }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="layui-col-md3">
+            &nbsp;
+        </div>
+    </div>
+</div>
+
+<script src="/static/layui/layui.js"></script>
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'form'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+        form.on('submit(form-search)', function (data) {
+            data.form.method = 'get';
+            return true;
+        });
+        form.on('submit(form-naming)', function (data) {
+            data.form.method = 'post';
+            return true;
+        });
+    });
+</script>
+</body>
+</html>

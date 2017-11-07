@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for
 from flask import render_template
 from flask import request
+from model import Naming
 
 app = Flask(__name__)
 
@@ -16,14 +17,13 @@ def index():
 def naming():
     if request.method == 'GET':
         chinese_name = request.args.get('chinese_name', '')
-        return render_template('index.html', result=dict.get(chinese_name, []), chinese_name=chinese_name)
+        namings = Naming.query.filter_by(chinese_name=chinese_name)
+        result = map(lambda x: x.english_name, namings)
+        return render_template('index.html', result=result, chinese_name=chinese_name)
     else:
         chinese_name = request.form['chinese_name']
         english_name = request.form['english_name']
-        result = dict.get(chinese_name, [])
-        result.insert(0, english_name)
-        if (len(result) == 1):
-            dict[chinese_name] = result
+        Naming(chinese_name, english_name).save()
         return redirect(url_for('naming', chinese_name=chinese_name))
 
 
